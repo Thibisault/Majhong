@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "majhong-pwa-cache-v2";
+﻿const CACHE_NAME = "majhong-pwa-cache-v3";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -6,7 +6,8 @@ const PRECACHE = [
   "./app.js",
   "./manifest.webmanifest",
   "./icon-192.svg",
-  "./icon-512.svg"
+  "./icon-512.svg",
+  "./Gemini_Generated_Image_wo75ujwo75ujwo75.png"
 ];
 
 self.addEventListener("install", (event) => {
@@ -63,11 +64,10 @@ async function cacheFirst(request) {
       }
     }
 
-    return new Response("Mode hors ligne indisponible pour cette ressource.", {
+    return new Response("Offline resource unavailable.", {
       status: 503,
       statusText: "Service Unavailable",
       headers: { "Content-Type": "text/plain; charset=utf-8" }
     });
   }
 }
-

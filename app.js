@@ -4,7 +4,7 @@ const negativeInput = document.getElementById("negative-score");
 const formError = document.getElementById("form-error");
 const halfResult = document.getElementById("half-result");
 const resultMeta = document.getElementById("result-meta");
-const historyBody = document.getElementById("history-body");
+const historyList = document.getElementById("history-list");
 const clearHistoryButton = document.getElementById("clear-history");
 const globalTotalText = document.getElementById("global-total");
 const todaySessionText = document.getElementById("today-session-total");
@@ -14,17 +14,18 @@ const DB_NAME = "majhong-history-db";
 const DB_VERSION = 1;
 const STORE_NAME = "games";
 
-const numberFormat = new Intl.NumberFormat("fr-FR", {
+const numberFormat = new Intl.NumberFormat("zh-CN", {
   minimumFractionDigits: 0,
   maximumFractionDigits: 2
 });
 
-const dateFormat = new Intl.DateTimeFormat("fr-FR", {
+const dateFormat = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
   hour: "2-digit",
-  minute: "2-digit"
+  minute: "2-digit",
+  hour12: false
 });
 
 let db = null;
@@ -36,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await renderHistory();
     registerServiceWorker();
   } catch (error) {
-    showError("Impossible de lancer la base locale.");
+    showError("本地数据库启动失败。请刷新后重试。");
     console.error(error);
   }
 });
@@ -87,7 +88,7 @@ async function onSubmit(event) {
     form.reset();
     await renderHistory();
   } catch (error) {
-    showError("Erreur pendant l'enregistrement.");
+    showError("保存失败，请稍后重试。");
     console.error(error);
   }
 }
@@ -97,24 +98,24 @@ function parseRawScore() {
   const negativeValue = negativeInput.value.trim();
 
   if (positiveValue && negativeValue) {
-    return { error: "Remplis une seule case a la fois." };
+    return { error: "正分和负分只能填写一个。" };
   }
 
   if (!positiveValue && !negativeValue) {
-    return { error: "Entre un score dans la case positive ou negative." };
+    return { error: "请在正分或负分中填写一个分数。" };
   }
 
   if (positiveValue) {
     const value = Number(positiveValue);
     if (!Number.isFinite(value)) {
-      return { error: "Score positif invalide." };
+      return { error: "正分格式不正确。" };
     }
     return { rawScore: Math.abs(value) };
   }
 
   const value = Number(negativeValue);
   if (!Number.isFinite(value)) {
-    return { error: "Score negatif invalide." };
+    return { error: "负分格式不正确。" };
   }
 
   return { rawScore: -Math.abs(value) };
@@ -122,32 +123,39 @@ function parseRawScore() {
 
 async function renderHistory() {
   const games = await getAllGames();
-
-  historyBody.innerHTML = "";
+  historyList.innerHTML = "";
 
   if (games.length === 0) {
-    historyBody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucune partie pour le moment.</td></tr>';
+    historyList.innerHTML = '<li class="empty-state-card">暂时没有对局记录。</li>';
     updateTotals(0, 0, 0, 0);
     halfResult.textContent = "0";
     halfResult.className = "positive-text";
-    resultMeta.textContent = "Aucune partie enregistree";
+    resultMeta.textContent = "暂无记录";
     return;
   }
 
   const sorted = [...games].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   let sinceThisGame = 0;
 
-  for (const game of sorted) {
+  for (let index = 0; index < sorted.length; index += 1) {
+    const game = sorted[index];
     sinceThisGame += Number(game.halfScore || 0);
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${formatDate(game.createdAt)}</td>
-      <td class="${numberClass(game.rawScore)}">${formatSigned(game.rawScore)}</td>
-      <td class="${numberClass(game.halfScore)}">${formatSigned(game.halfScore)}</td>
-      <td class="${numberClass(game.cumulative)}">${formatSigned(game.cumulative)}</td>
-      <td class="${numberClass(sinceThisGame)}">${formatSigned(sinceThisGame)}</td>
+
+    const item = document.createElement("li");
+    item.className = "history-item";
+    item.innerHTML = `
+      <div class="history-item-head">
+        <strong>第 ${sorted.length - index} 局</strong>
+        <span>${formatDate(game.createdAt)}</span>
+      </div>
+      <div class="history-metrics">
+        <p><span>输入分数</span><b class="${numberClass(game.rawScore)}">${formatSigned(game.rawScore)}</b></p>
+        <p><span>本局金额（/2）</span><b class="${numberClass(game.halfScore)}">${formatSigned(game.halfScore)}</b></p>
+        <p><span>累计总额</span><b class="${numberClass(game.cumulative)}">${formatSigned(game.cumulative)}</b></p>
+        <p><span>从本局到最新</span><b class="${numberClass(sinceThisGame)}">${formatSigned(sinceThisGame)}</b></p>
+      </div>
     `;
-    historyBody.appendChild(row);
+    historyList.appendChild(item);
   }
 
   const latest = sorted[0];
@@ -163,14 +171,13 @@ async function renderHistory() {
 function renderBigResult(value, dateIso) {
   halfResult.textContent = formatSigned(value);
   halfResult.className = numberClass(value);
-  resultMeta.textContent = `Derniere partie: ${formatDate(dateIso)}`;
+  resultMeta.textContent = `最近一局: ${formatDate(dateIso)}`;
 }
 
 function updateTotals(count, total, todayTotal, todayCount) {
-  gameCountText.textContent = `Parties: ${count}`;
-  globalTotalText.innerHTML = `Total: <span class="${numberClass(total)}">${formatSigned(total)}</span>`;
-  const suffix = todayCount > 1 ? "s" : "";
-  todaySessionText.innerHTML = `Session aujourd'hui (${todayCount} partie${suffix}): <span class="${numberClass(todayTotal)}">${formatSigned(todayTotal)}</span>`;
+  gameCountText.innerHTML = `总局数: <span>${count}</span>`;
+  globalTotalText.innerHTML = `总计: <span class="${numberClass(total)}">${formatSigned(total)}</span>`;
+  todaySessionText.innerHTML = `今日会话（${todayCount}局）: <span class="${numberClass(todayTotal)}">${formatSigned(todayTotal)}</span>`;
 }
 
 async function getCurrentTotal() {
@@ -179,7 +186,7 @@ async function getCurrentTotal() {
 }
 
 function onClearHistory() {
-  const confirmClear = window.confirm("Voulez-vous effacer tout l'historique ?");
+  const confirmClear = window.confirm("确定要清空所有历史记录吗？");
   if (!confirmClear) {
     return;
   }
@@ -187,7 +194,7 @@ function onClearHistory() {
   clearAllGames()
     .then(() => renderHistory())
     .catch((error) => {
-      showError("Impossible d'effacer l'historique.");
+      showError("清空失败，请重试。");
       console.error(error);
     });
 }
@@ -275,7 +282,7 @@ function registerServiceWorker() {
 
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js").catch((error) => {
-      console.error("Service worker non enregistre", error);
+      console.error("Service Worker 注册失败", error);
     });
   });
 }

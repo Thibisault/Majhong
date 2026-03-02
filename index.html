@@ -1,85 +1,79 @@
 ﻿<!doctype html>
-<html lang="fr">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#14532d">
-  <title>Calcul Majhong</title>
-  <meta name="description" content="Calcul Majhong: score / 2 avec historique local.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="麻将记分">
+  <meta name="format-detection" content="telephone=no">
+  <title>麻将记分</title>
+  <meta name="description" content="麻将记分: 输入分数后自动计算分数除以2并保存历史记录。">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="./icon-192.svg">
   <link rel="apple-touch-icon" href="./icon-192.svg">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="background-orb background-orb-a" aria-hidden="true"></div>
-  <div class="background-orb background-orb-b" aria-hidden="true"></div>
-
   <main class="app-shell">
     <header class="hero">
-      <p class="eyebrow">PWA perso</p>
-      <h1>Calcul Majhong</h1>
-      <p class="subtitle">Tu entres un score positif ou negatif, le calcul <strong>score / 2</strong> s'affiche en grand et chaque partie est sauvegardee en local.</p>
+      <p class="eyebrow">PWA 记分工具</p>
+      <h1>麻将记分</h1>
+      <p class="subtitle">输入正分或负分，自动显示 <strong>分数 / 2</strong>。每一局都会保存到本地历史，方便你快速查看盈亏。</p>
     </header>
 
-    <section class="card input-card" aria-labelledby="input-title">
-      <h2 id="input-title">Nouvelle partie</h2>
+    <nav class="quick-nav" aria-label="页面导航">
+      <a href="#entry-section">录入分数</a>
+      <a href="#history-section">查看历史</a>
+    </nav>
+
+    <section id="entry-section" class="card input-card" aria-labelledby="input-title">
+      <h2 id="input-title">新增一局</h2>
       <form id="score-form" novalidate>
         <div class="grid-inputs">
           <label class="input-block" for="positive-score">
-            <span>Case positive (gain)</span>
-            <input id="positive-score" type="number" inputmode="decimal" min="0" step="1" placeholder="Ex: 120">
+            <span>正分（赢）</span>
+            <input id="positive-score" type="number" inputmode="decimal" min="0" step="1" placeholder="例如: 120">
           </label>
 
           <label class="input-block" for="negative-score">
-            <span>Case negative (perte)</span>
-            <input id="negative-score" type="number" inputmode="decimal" min="0" step="1" placeholder="Ex: 80">
+            <span>负分（输）</span>
+            <input id="negative-score" type="number" inputmode="decimal" min="0" step="1" placeholder="例如: 80">
           </label>
         </div>
 
         <div class="actions">
-          <button type="submit" class="btn btn-primary">Enregistrer la partie</button>
-          <button type="button" id="clear-history" class="btn btn-secondary">Effacer historique</button>
+          <button type="submit" class="btn btn-primary">保存本局</button>
+          <button type="button" id="clear-history" class="btn btn-secondary">清空历史</button>
         </div>
 
         <p id="form-error" class="form-error" role="alert" aria-live="polite"></p>
       </form>
 
       <div class="result-display" aria-live="polite">
-        <span class="result-label">Resultat / 2</span>
+        <span class="result-label">本局金额（分数 / 2）</span>
         <strong id="half-result" class="positive-text">0</strong>
-        <small id="result-meta">Aucune partie enregistree</small>
+        <small id="result-meta">暂无记录</small>
       </div>
     </section>
 
-    <section class="card history-card" aria-labelledby="history-title">
+    <section id="history-section" class="card history-card" aria-labelledby="history-title">
       <div class="history-head">
-        <h2 id="history-title">Historique des parties</h2>
+        <h2 id="history-title">对局历史</h2>
         <div class="totals">
-          <p id="global-total">Total: 0</p>
-          <p id="today-session-total">Session aujourd'hui: 0</p>
-          <p id="game-count">Parties: 0</p>
+          <p id="global-total">总计: 0</p>
+          <p id="today-session-total">今日会话: 0</p>
+          <p id="game-count">总局数: 0</p>
         </div>
       </div>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Date & heure</th>
-              <th>Score saisi</th>
-              <th>Argent gagne/perdu (score / 2)</th>
-              <th>Cumul global</th>
-              <th>Depuis cette partie</th>
-            </tr>
-          </thead>
-          <tbody id="history-body">
-            <tr>
-              <td colspan="5" class="empty-state">Aucune partie pour le moment.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <p class="history-tip">提示: 看“从本局到最新”这一项，可以直接知道从那一局到现在一共赢/输多少。</p>
+
+      <ul id="history-list" class="history-list">
+        <li class="empty-state-card">暂时没有对局记录。</li>
+      </ul>
     </section>
   </main>
 

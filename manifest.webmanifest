@@ -1,11 +1,16 @@
 ﻿{
-  "name": "Calcul Majhong",
-  "short_name": "Majhong",
-  "description": "Calcul rapide du score / 2 avec historique local.",
-  "lang": "fr",
+  "name": "麻将记分助手",
+  "short_name": "麻将记分",
+  "description": "输入正分或负分，自动计算分数除以2并记录历史。",
+  "lang": "zh-CN",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "fullscreen",
+    "standalone"
+  ],
+  "orientation": "portrait",
   "background_color": "#f6f3ea",
   "theme_color": "#14532d",
   "icons": [
