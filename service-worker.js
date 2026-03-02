@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "majhong-pwa-cache-v1";
+﻿const CACHE_NAME = "majhong-pwa-cache-v2";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -70,3 +70,4 @@ async function cacheFirst(request) {
     });
   }
 }
+

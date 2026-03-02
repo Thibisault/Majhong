@@ -217,7 +217,7 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 680px;
+  min-width: 860px;
 }
 
 th,
@@ -266,6 +266,6 @@ th {
   }
 
   table {
-    min-width: 560px;
+    min-width: 760px;
   }
 }

@@ -11,9 +11,10 @@ Application web progressive (PWA) simple pour calculer `score / 2` apres chaque 
   - score saisi
   - argent gagne/perdu (`score / 2`)
   - cumul global
+  - montant `depuis cette partie` (jusqu'a la derniere partie)
 - Resume automatique:
   - total global
-  - cumul des 5 dernieres parties
+  - session du jour (nombre de parties + total)
 - Fonctionne hors ligne via service worker
 
 ## Lancer en local

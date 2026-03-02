@@ -7,7 +7,7 @@ const resultMeta = document.getElementById("result-meta");
 const historyBody = document.getElementById("history-body");
 const clearHistoryButton = document.getElementById("clear-history");
 const globalTotalText = document.getElementById("global-total");
-const lastFiveText = document.getElementById("last-five-total");
+const todaySessionText = document.getElementById("today-session-total");
 const gameCountText = document.getElementById("game-count");
 
 const DB_NAME = "majhong-history-db";
@@ -126,8 +126,8 @@ async function renderHistory() {
   historyBody.innerHTML = "";
 
   if (games.length === 0) {
-    historyBody.innerHTML = '<tr><td colspan="4" class="empty-state">Aucune partie pour le moment.</td></tr>';
-    updateTotals(0, 0, 0);
+    historyBody.innerHTML = '<tr><td colspan="5" class="empty-state">Aucune partie pour le moment.</td></tr>';
+    updateTotals(0, 0, 0, 0);
     halfResult.textContent = "0";
     halfResult.className = "positive-text";
     resultMeta.textContent = "Aucune partie enregistree";
@@ -135,14 +135,17 @@ async function renderHistory() {
   }
 
   const sorted = [...games].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  let sinceThisGame = 0;
 
   for (const game of sorted) {
+    sinceThisGame += Number(game.halfScore || 0);
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${formatDate(game.createdAt)}</td>
       <td class="${numberClass(game.rawScore)}">${formatSigned(game.rawScore)}</td>
       <td class="${numberClass(game.halfScore)}">${formatSigned(game.halfScore)}</td>
       <td class="${numberClass(game.cumulative)}">${formatSigned(game.cumulative)}</td>
+      <td class="${numberClass(sinceThisGame)}">${formatSigned(sinceThisGame)}</td>
     `;
     historyBody.appendChild(row);
   }
@@ -151,8 +154,10 @@ async function renderHistory() {
   renderBigResult(latest.halfScore, latest.createdAt);
 
   const total = games.reduce((sum, game) => sum + Number(game.halfScore || 0), 0);
-  const lastFive = sorted.slice(0, 5).reduce((sum, game) => sum + Number(game.halfScore || 0), 0);
-  updateTotals(games.length, total, lastFive);
+  const todayKey = toDateKey(new Date());
+  const todayGames = games.filter((game) => toDateKey(new Date(game.createdAt)) === todayKey);
+  const todayTotal = todayGames.reduce((sum, game) => sum + Number(game.halfScore || 0), 0);
+  updateTotals(games.length, total, todayTotal, todayGames.length);
 }
 
 function renderBigResult(value, dateIso) {
@@ -161,10 +166,11 @@ function renderBigResult(value, dateIso) {
   resultMeta.textContent = `Derniere partie: ${formatDate(dateIso)}`;
 }
 
-function updateTotals(count, total, lastFive) {
+function updateTotals(count, total, todayTotal, todayCount) {
   gameCountText.textContent = `Parties: ${count}`;
   globalTotalText.innerHTML = `Total: <span class="${numberClass(total)}">${formatSigned(total)}</span>`;
-  lastFiveText.innerHTML = `Cumul 5 dernieres parties: <span class="${numberClass(lastFive)}">${formatSigned(lastFive)}</span>`;
+  const suffix = todayCount > 1 ? "s" : "";
+  todaySessionText.innerHTML = `Session aujourd'hui (${todayCount} partie${suffix}): <span class="${numberClass(todayTotal)}">${formatSigned(todayTotal)}</span>`;
 }
 
 async function getCurrentTotal() {
@@ -241,6 +247,13 @@ function formatSigned(value) {
 
 function formatDate(isoDate) {
   return dateFormat.format(new Date(isoDate));
+}
+
+function toDateKey(dateObj) {
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function numberClass(value) {
