@@ -1,0 +1,271 @@
+﻿:root {
+  --bg: #f6f3ea;
+  --card: #fffcf3;
+  --ink: #1f2933;
+  --muted: #475569;
+  --line: #d7ccb3;
+  --accent: #14532d;
+  --accent-soft: #1f7a45;
+  --danger: #b42318;
+  --danger-soft: #de3f35;
+  --shadow: 0 20px 45px rgba(20, 83, 45, 0.13);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(circle at 10% 10%, #fff8e1 0%, #f7efe0 38%, #f2ead6 100%);
+  color: var(--ink);
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+body {
+  padding: 24px;
+  position: relative;
+}
+
+.background-orb {
+  position: fixed;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.background-orb-a {
+  width: 280px;
+  height: 280px;
+  right: -80px;
+  top: -80px;
+  background: linear-gradient(145deg, #e3c56f, #f3dd96);
+  opacity: 0.45;
+}
+
+.background-orb-b {
+  width: 240px;
+  height: 240px;
+  left: -70px;
+  bottom: -70px;
+  background: linear-gradient(145deg, #91e1be, #4fb985);
+  opacity: 0.3;
+}
+
+.app-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+}
+
+.hero {
+  background: linear-gradient(130deg, #0b5b32, #157347);
+  color: #f0fdf4;
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.hero h1 {
+  margin: 6px 0 12px;
+  font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+}
+
+.subtitle {
+  margin: 0;
+  max-width: 70ch;
+  line-height: 1.5;
+}
+
+.card {
+  background: color-mix(in srgb, var(--card) 90%, white 10%);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.card h2 {
+  margin: 0 0 12px;
+}
+
+.grid-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.input-block {
+  display: grid;
+  gap: 6px;
+}
+
+.input-block span {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.input-block input {
+  width: 100%;
+  border: 1px solid #b8c0c7;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 1rem;
+  color: var(--ink);
+  background: #fff;
+}
+
+.input-block input:focus {
+  outline: 2px solid #2ea365;
+  border-color: transparent;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, #157347, #0f5f3a);
+  color: #f0fff4;
+}
+
+.btn-secondary {
+  background: #efe4cc;
+  color: #5a3a00;
+}
+
+.form-error {
+  min-height: 1.3rem;
+  margin: 10px 0 0;
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.result-display {
+  margin-top: 16px;
+  border-top: 1px dashed #d8c9aa;
+  padding-top: 14px;
+}
+
+.result-label {
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+}
+
+#half-result {
+  display: block;
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: 1;
+  margin: 8px 0;
+}
+
+#result-meta {
+  color: var(--muted);
+}
+
+.history-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.totals {
+  display: grid;
+  gap: 4px;
+}
+
+.totals p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.table-wrap {
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+
+th,
+td {
+  text-align: left;
+  border-bottom: 1px solid #e5d6b8;
+  padding: 11px 8px;
+  vertical-align: top;
+}
+
+th {
+  color: #334155;
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.empty-state {
+  color: #64748b;
+  text-align: center;
+  font-style: italic;
+}
+
+.positive-text {
+  color: var(--accent-soft);
+  font-weight: 800;
+}
+
+.negative-text {
+  color: var(--danger-soft);
+  font-weight: 800;
+}
+
+@media (max-width: 780px) {
+  body {
+    padding: 14px;
+  }
+
+  .grid-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .hero,
+  .card {
+    border-radius: 14px;
+  }
+
+  table {
+    min-width: 560px;
+  }
+}

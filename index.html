@@ -1,0 +1,87 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14532d">
+  <title>Calcul Majhong</title>
+  <meta name="description" content="Calcul Majhong: score / 2 avec historique local.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./icon-192.svg">
+  <link rel="apple-touch-icon" href="./icon-192.svg">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="background-orb background-orb-a" aria-hidden="true"></div>
+  <div class="background-orb background-orb-b" aria-hidden="true"></div>
+
+  <main class="app-shell">
+    <header class="hero">
+      <p class="eyebrow">PWA perso</p>
+      <h1>Calcul Majhong</h1>
+      <p class="subtitle">Tu entres un score positif ou negatif, le calcul <strong>score / 2</strong> s'affiche en grand et chaque partie est sauvegardee en local.</p>
+    </header>
+
+    <section class="card input-card" aria-labelledby="input-title">
+      <h2 id="input-title">Nouvelle partie</h2>
+      <form id="score-form" novalidate>
+        <div class="grid-inputs">
+          <label class="input-block" for="positive-score">
+            <span>Case positive (gain)</span>
+            <input id="positive-score" type="number" inputmode="decimal" min="0" step="1" placeholder="Ex: 120">
+          </label>
+
+          <label class="input-block" for="negative-score">
+            <span>Case negative (perte)</span>
+            <input id="negative-score" type="number" inputmode="decimal" min="0" step="1" placeholder="Ex: 80">
+          </label>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">Enregistrer la partie</button>
+          <button type="button" id="clear-history" class="btn btn-secondary">Effacer historique</button>
+        </div>
+
+        <p id="form-error" class="form-error" role="alert" aria-live="polite"></p>
+      </form>
+
+      <div class="result-display" aria-live="polite">
+        <span class="result-label">Resultat / 2</span>
+        <strong id="half-result" class="positive-text">0</strong>
+        <small id="result-meta">Aucune partie enregistree</small>
+      </div>
+    </section>
+
+    <section class="card history-card" aria-labelledby="history-title">
+      <div class="history-head">
+        <h2 id="history-title">Historique des parties</h2>
+        <div class="totals">
+          <p id="global-total">Total: 0</p>
+          <p id="last-five-total">Cumul 5 dernieres parties: 0</p>
+          <p id="game-count">Parties: 0</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date & heure</th>
+              <th>Score saisi</th>
+              <th>Argent gagne/perdu (score / 2)</th>
+              <th>Cumul</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <tr>
+              <td colspan="4" class="empty-state">Aucune partie pour le moment.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
