@@ -1,8 +1,8 @@
 ﻿:root {
   --ink: #1f2933;
   --muted: #475569;
-  --card: rgba(255, 252, 244, 0.9);
-  --card-border: rgba(198, 179, 145, 0.65);
+  --card: rgba(255, 252, 244, 0.76);
+  --card-border: rgba(198, 179, 145, 0.58);
   --accent: #14532d;
   --accent-soft: #1f7a45;
   --danger: #b42318;
@@ -37,7 +37,10 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background: url("./Gemini_Generated_Image_wo75ujwo75ujwo75.png") center center / cover no-repeat;
+  background: url("./background-optimized.webp") center center / cover no-repeat;
+  filter: saturate(1.18) contrast(1.08) brightness(0.92);
+  transform: scale(1.02);
+  transform-origin: center;
 }
 
 body::after {
@@ -46,7 +49,7 @@ body::after {
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(150deg, rgba(252, 248, 236, 0.82) 0%, rgba(248, 241, 222, 0.85) 45%, rgba(246, 239, 219, 0.86) 100%);
+    linear-gradient(150deg, rgba(252, 248, 236, 0.38) 0%, rgba(248, 241, 222, 0.44) 45%, rgba(246, 239, 219, 0.48) 100%);
 }
 
 .app-shell {
@@ -96,7 +99,7 @@ body::after {
   text-decoration: none;
   text-align: center;
   color: #0f5132;
-  background: rgba(255, 250, 236, 0.92);
+  background: rgba(255, 250, 236, 0.84);
   border: 1px solid rgba(198, 179, 145, 0.85);
   border-radius: 999px;
   padding: 10px 12px;
@@ -238,7 +241,7 @@ body::after {
 .history-item {
   border: 1px solid rgba(198, 179, 145, 0.75);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.82);
   padding: 11px;
 }
 
@@ -269,7 +272,7 @@ body::after {
   margin: 0;
   border: 1px solid #ebe0c9;
   border-radius: 10px;
-  background: #fffdf7;
+  background: rgba(255, 253, 247, 0.9);
   padding: 9px;
   display: grid;
   gap: 4px;
@@ -336,3 +339,6 @@ body::after {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+
+

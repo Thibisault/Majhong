@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "majhong-pwa-cache-v3";
+﻿const CACHE_NAME = "majhong-pwa-cache-v4";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -7,7 +7,7 @@ const PRECACHE = [
   "./manifest.webmanifest",
   "./icon-192.svg",
   "./icon-512.svg",
-  "./Gemini_Generated_Image_wo75ujwo75ujwo75.png"
+  "./background-optimized.webp"
 ];
 
 self.addEventListener("install", (event) => {
@@ -71,3 +71,4 @@ async function cacheFirst(request) {
     });
   }
 }
+
